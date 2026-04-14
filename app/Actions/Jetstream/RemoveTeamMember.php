@@ -42,7 +42,9 @@ class RemoveTeamMember implements RemovesTeamMembers
      */
     protected function ensureUserDoesNotOwnTeam(User $teamMember, Team $team): void
     {
-        if ($teamMember->id === $team->owner->id) {
+        /** @var User $owner */
+        $owner = $team->owner;
+        if ($teamMember->id === $owner->id) {
             throw ValidationException::withMessages([
                 'team' => [__('You may not leave a team that you created.')],
             ])->errorBag('removeTeamMember');
