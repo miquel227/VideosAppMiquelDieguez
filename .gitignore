@@ -1,30 +1,57 @@
-*.log
-.DS_Store
+# Dependències
+/vendor
+/node_modules
+
+# Variables d'entorn i secrets
 .env
 .env.backup
 .env.production
-.phpactor.json
-.phpunit.result.cache
-/.fleet
-/.idea
-/.nova
-/.phpunit.cache
-/.vscode
-/.zed
+.env.testing
 /auth.json
-/node_modules
+/storage/*.key
+
+# Base de dades
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+
+# Fitxers generats per Laravel
 /public/build
 /public/hot
 /public/storage
-/storage/*.key
 /storage/pail
-/vendor
-_ide_helper.php
-Homestead.json
-Homestead.yaml
+/bootstrap/cache/*.php
+
+# Logs i cache
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.phpunit.result.cache
+/.phpunit.cache
+
+# Cobertura de tests
+/coverage
+/clover.xml
+/.phpunit.coverage
+
+# Editors i IDEs
+.DS_Store
 Thumbs.db
+.phpactor.json
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
 
 # Eines de desenvolupament locals
+Homestead.json
+Homestead.yaml
 .claude
 .cursor
 .aider*
