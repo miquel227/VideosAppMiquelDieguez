@@ -40,6 +40,7 @@ class VideosManageController extends Controller
         ]);
 
         $validated['published_at'] = now();
+        $validated['user_id']      = auth()->id();
 
         Video::create($validated);
 

@@ -168,7 +168,7 @@ function create_video_manager_user(): User
 }
 
 /**
- * Crea o retorna el Super Admin.
+ * Crea o retorna el Super Admin i li assigna els permisos de gestió d'usuaris.
  */
 function create_superadmin_user(): User
 {
@@ -186,6 +186,14 @@ function create_superadmin_user(): User
     }
 
     add_personal_team($user);
+
+    $userPermissions = ['manage-users', 'create-users', 'edit-users', 'delete-users'];
+    foreach ($userPermissions as $permName) {
+        $perm = Permission::firstOrCreate(['name' => $permName]);
+        if (! $user->hasPermissionTo($permName)) {
+            $user->givePermissionTo($perm);
+        }
+    }
 
     return $user->fresh();
 }
@@ -212,6 +220,22 @@ function define_gates(): void
     Gate::define('delete-videos', function (User $user): bool {
         return $user->hasPermissionTo('delete-videos') || $user->isSuperAdmin();
     });
+
+    Gate::define('manage-users', function (User $user): bool {
+        return $user->hasPermissionTo('manage-users') || $user->isSuperAdmin();
+    });
+
+    Gate::define('create-users', function (User $user): bool {
+        return $user->hasPermissionTo('create-users') || $user->isSuperAdmin();
+    });
+
+    Gate::define('edit-users', function (User $user): bool {
+        return $user->hasPermissionTo('edit-users') || $user->isSuperAdmin();
+    });
+
+    Gate::define('delete-users', function (User $user): bool {
+        return $user->hasPermissionTo('delete-users') || $user->isSuperAdmin();
+    });
 }
 
 /**
@@ -219,7 +243,10 @@ function define_gates(): void
  */
 function create_permissions(): void
 {
-    $permissions = ['manage-videos', 'create-videos', 'edit-videos', 'delete-videos'];
+    $permissions = [
+        'manage-videos', 'create-videos', 'edit-videos', 'delete-videos',
+        'manage-users',  'create-users',  'edit-users',  'delete-users',
+    ];
     foreach ($permissions as $name) {
         Permission::firstOrCreate(['name' => $name]);
     }

@@ -56,6 +56,21 @@ L'aplicació ha estat construïda amb **Laravel + Jetstream (Livewire)** i perme
 - Tests: `UserTest`, `VideosTest` (+3 tests índex) i `VideosManageControllerTest` (+10 tests CRUD) seguint **TDD + AAA**.
 - Verificació de 0 errors amb **Larastan**.
 
+### 5è Sprint
+
+- Afegit el camp **`user_id`** a la taula de vídeos (migració amb clau forana nullable, cascade a null en eliminar l'usuari).
+- Model `Video` actualitzat: `user_id` al `$fillable` i relació `BelongsTo` amb `User`.
+- `VideosManageController::store()` assigna automàticament `user_id = auth()->id()` en crear un vídeo.
+- Nou **`UsersController`** amb funcions `index()` (llistat d'usuaris amb cercador) i `show()` (perfil d'usuari i els seus vídeos).
+- Nou **`UsersManageController`** amb CRUD complet: `index`, `create`, `store`, `edit`, `update`, `delete`, `destroy`.
+- Nous permisos CRUD d'usuaris: **`manage-users`**, **`create-users`**, **`edit-users`**, **`delete-users`** (afegits a `create_permissions()` i `define_gates()`).
+- **`create_superadmin_user()`** assigna els 4 permisos de gestió d'usuaris al Super Admin.
+- Vistes CRUD de gestió d'usuaris: `users/manage/index.blade.php`, `users/manage/create.blade.php`, `users/manage/edit.blade.php`, `users/manage/delete.blade.php` (amb atribut `data-qa`).
+- Vista pública **`users/index.blade.php`** amb llistat d'usuaris i cercador, i **`users/show.blade.php`** amb perfil i vídeos de l'usuari.
+- Rutes d'usuaris protegides per gate (manage) i per auth (index i show), amb l'ordre correcte per evitar conflictes amb el wildcard `{user}`.
+- Tests `UsersTest` (6 tests: index i show per 3 rols) i `UsersManageControllerTest` (14 tests CRUD per 3 rols) seguint **TDD + AAA**.
+- Verificació de 0 errors amb **Larastan**.
+
 ---
 
 ## Alumne

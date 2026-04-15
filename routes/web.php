@@ -1,11 +1,53 @@
 <?php
 
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\UsersManageController;
 use App\Http\Controllers\VideosController;
 use App\Http\Controllers\VideosManageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+// ─── Rutes d'usuaris (auth) — manage ABANS del wildcard {user} ───────────────
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/users', [UsersController::class, 'index'])
+        ->name('users.index');
+
+    // Gestió d'usuaris (cal posar-les ABANS del wildcard {user})
+    Route::get('/users/manage', [UsersManageController::class, 'index'])
+        ->name('users.manage')
+        ->can('manage-users');
+
+    Route::get('/users/manage/create', [UsersManageController::class, 'create'])
+        ->name('users.manage.create')
+        ->can('create-users');
+
+    Route::post('/users/manage', [UsersManageController::class, 'store'])
+        ->name('users.manage.store')
+        ->can('create-users');
+
+    Route::get('/users/manage/{user}/edit', [UsersManageController::class, 'edit'])
+        ->name('users.manage.edit')
+        ->can('edit-users');
+
+    Route::put('/users/manage/{user}', [UsersManageController::class, 'update'])
+        ->name('users.manage.update')
+        ->can('edit-users');
+
+    Route::get('/users/manage/{user}/delete', [UsersManageController::class, 'delete'])
+        ->name('users.manage.delete')
+        ->can('delete-users');
+
+    Route::delete('/users/manage/{user}', [UsersManageController::class, 'destroy'])
+        ->name('users.manage.destroy')
+        ->can('delete-users');
+
+    // Perfil públic d'usuari (wildcard al final)
+    Route::get('/users/{user}', [UsersController::class, 'show'])
+        ->name('users.show');
 });
 
 // ─── Rutes de gestió de vídeos (auth + gates) — ABANS dels wildcards ─────────

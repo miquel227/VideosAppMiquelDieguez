@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
 
 class Video extends Model
@@ -11,6 +12,7 @@ class Video extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'title',
         'description',
         'url',
@@ -23,6 +25,11 @@ class Video extends Model
     protected $casts = [
         'published_at' => 'datetime',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // Retorna "13 de gener de 2025"
     public function getFormattedPublishedAtAttribute(): ?string

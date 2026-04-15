@@ -9,6 +9,7 @@ class VideoFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id'      => null,
             'title'        => $this->faker->sentence(4),
             'description'  => $this->faker->paragraph(),
             'url'          => 'https://www.youtube.com/watch?v=' . $this->faker->regexify('[A-Za-z0-9_-]{11}'),
