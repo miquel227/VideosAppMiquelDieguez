@@ -11,6 +11,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -20,6 +21,7 @@ class User extends Authenticatable
     use HasFactory;
 
     use HasProfilePhoto;
+    use HasRoles;
     use HasTeams;
     use Notifiable;
     use TwoFactorAuthenticatable;
@@ -33,6 +35,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'super_admin',
     ];
 
     /**
@@ -65,7 +68,18 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
+            'super_admin'       => 'boolean',
         ];
+    }
+
+    public static function testedBy(): string
+    {
+        return \Tests\Unit\UserTest::class;
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return (bool) $this->super_admin;
     }
 }
