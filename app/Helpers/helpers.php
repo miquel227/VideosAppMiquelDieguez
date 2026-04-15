@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Serie;
 use App\Models\Team;
 use App\Models\User;
 use App\Models\Video;
@@ -156,7 +157,10 @@ function create_video_manager_user(): User
 
     add_personal_team($user);
 
-    $permissions = ['manage-videos', 'create-videos', 'edit-videos', 'delete-videos'];
+    $permissions = [
+        'manage-videos',  'create-videos',  'edit-videos',  'delete-videos',
+        'manage-series',  'create-series',  'edit-series',  'delete-series',
+    ];
     foreach ($permissions as $permName) {
         $perm = Permission::firstOrCreate(['name' => $permName]);
         if (! $user->hasPermissionTo($permName)) {
@@ -187,7 +191,10 @@ function create_superadmin_user(): User
 
     add_personal_team($user);
 
-    $userPermissions = ['manage-users', 'create-users', 'edit-users', 'delete-users'];
+    $userPermissions = [
+        'manage-users',  'create-users',  'edit-users',  'delete-users',
+        'manage-series', 'create-series', 'edit-series', 'delete-series',
+    ];
     foreach ($userPermissions as $permName) {
         $perm = Permission::firstOrCreate(['name' => $permName]);
         if (! $user->hasPermissionTo($permName)) {
@@ -196,6 +203,44 @@ function create_superadmin_user(): User
     }
 
     return $user->fresh();
+}
+
+// ─── Helpers de sèries (Sprint 6) ────────────────────────────────────────────
+
+/**
+ * Crea 3 sèries per defecte a la base de dades.
+ */
+function create_series(): void
+{
+    Serie::firstOrCreate(
+        ['title' => 'Sèrie per defecte 1'],
+        [
+            'description'   => 'Descripció de la primera sèrie per defecte',
+            'user_name'     => 'Admin',
+            'user_photo_url' => null,
+            'published_at'  => now(),
+        ]
+    );
+
+    Serie::firstOrCreate(
+        ['title' => 'Sèrie per defecte 2'],
+        [
+            'description'   => 'Descripció de la segona sèrie per defecte',
+            'user_name'     => 'Admin',
+            'user_photo_url' => null,
+            'published_at'  => now(),
+        ]
+    );
+
+    Serie::firstOrCreate(
+        ['title' => 'Sèrie per defecte 3'],
+        [
+            'description'   => 'Descripció de la tercera sèrie per defecte',
+            'user_name'     => 'Admin',
+            'user_photo_url' => null,
+            'published_at'  => now(),
+        ]
+    );
 }
 
 // ─── Gates i permisos ─────────────────────────────────────────────────────────
@@ -236,6 +281,22 @@ function define_gates(): void
     Gate::define('delete-users', function (User $user): bool {
         return $user->hasPermissionTo('delete-users') || $user->isSuperAdmin();
     });
+
+    Gate::define('manage-series', function (User $user): bool {
+        return $user->hasPermissionTo('manage-series') || $user->isSuperAdmin();
+    });
+
+    Gate::define('create-series', function (User $user): bool {
+        return $user->hasPermissionTo('create-series') || $user->isSuperAdmin();
+    });
+
+    Gate::define('edit-series', function (User $user): bool {
+        return $user->hasPermissionTo('edit-series') || $user->isSuperAdmin();
+    });
+
+    Gate::define('delete-series', function (User $user): bool {
+        return $user->hasPermissionTo('delete-series') || $user->isSuperAdmin();
+    });
 }
 
 /**
@@ -244,8 +305,9 @@ function define_gates(): void
 function create_permissions(): void
 {
     $permissions = [
-        'manage-videos', 'create-videos', 'edit-videos', 'delete-videos',
-        'manage-users',  'create-users',  'edit-users',  'delete-users',
+        'manage-videos',  'create-videos',  'edit-videos',  'delete-videos',
+        'manage-users',   'create-users',   'edit-users',   'delete-users',
+        'manage-series',  'create-series',  'edit-series',  'delete-series',
     ];
     foreach ($permissions as $name) {
         Permission::firstOrCreate(['name' => $name]);

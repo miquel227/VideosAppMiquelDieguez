@@ -71,6 +71,25 @@ L'aplicació ha estat construïda amb **Laravel + Jetstream (Livewire)** i perme
 - Tests `UsersTest` (6 tests: index i show per 3 rols) i `UsersManageControllerTest` (14 tests CRUD per 3 rols) seguint **TDD + AAA**.
 - Verificació de 0 errors amb **Larastan**.
 
+### 6è Sprint
+
+- Nova migració **`create_series_table`**: taula `series` amb els camps `id`, `title`, `description`, `image` (nullable), `user_name`, `user_photo_url` (nullable), `published_at` (nullable), `timestamps`.
+- Nova migració **`add_series_foreign_key_to_videos_table`**: afegeix clau forana de `videos.series_id` cap a `series.id` amb `nullOnDelete`.
+- Nou model **`Serie`** amb: `$fillable`, `testedBy()`, relació `videos()` (HasMany Video), i accessors de data en català (`getFormattedCreatedAtAttribute`, `getFormattedForHumansCreatedAtAttribute`, `getCreatedAtTimestampAttribute`).
+- Model `Video` actualitzat: afegida relació `serie()` (BelongsTo Serie).
+- Nous helpers: **`create_series()`** (crea 3 sèries per defecte), 4 nous permisos de sèries (`manage-series`, `create-series`, `edit-series`, `delete-series`) a `create_permissions()` i `define_gates()`.
+- `create_superadmin_user()` i `create_video_manager_user()` assignen ara també els 4 permisos de sèries.
+- Nou **`SeriesController`** amb `index()` (llistat amb cercador) i `show()` (vídeos de la sèrie).
+- Nou **`SeriesManageController`** amb CRUD complet: `index`, `create`, `store`, `edit`, `update`, `delete`, `destroy`.
+- Vistes CRUD de gestió: `series/manage/index.blade.php`, `series/manage/create.blade.php`, `series/manage/edit.blade.php`, `series/manage/delete.blade.php` (amb `data-qa`).
+- Vista pública **`series/index.blade.php`** amb llistat de sèries i cercador, i **`series/show.blade.php`** amb els vídeos de la sèrie.
+- Rutes de sèries protegides per gate (manage) i per auth (index i show), amb l'ordre correcte (`/series/manage` abans del wildcard `{serie}`).
+- Factory **`SerieFactory`** per als tests.
+- Tests unitaris `SerieTest` (1 test: `serie_have_videos`), tests feature `SeriesTest` (3 tests: index, show, guest) i `SeriesManageControllerTest` (15 tests CRUD per 3 rols) seguint **TDD + AAA**.
+- Correcció Larastan: `UsersManageController::update()` simplificada la comparació de password.
+- Resultat final: **111 tests passats**, 7 skipped (API), 0 fallats.
+- Verificació de 0 errors amb **Larastan**.
+
 ---
 
 ## Alumne

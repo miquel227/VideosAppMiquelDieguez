@@ -55,7 +55,7 @@ class UsersManageController extends Controller
             'password' => 'nullable|string|min:8',
         ]);
 
-        if (isset($validated['password']) && $validated['password'] !== null) {
+        if (isset($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
         } else {
             unset($validated['password']);

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\SeriesController;
+use App\Http\Controllers\SeriesManageController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UsersManageController;
 use App\Http\Controllers\VideosController;
@@ -85,6 +87,42 @@ Route::middleware(['auth'])->group(function () {
 // ─── Rutes públiques de vídeos ────────────────────────────────────────────────
 Route::get('/videos', [VideosController::class, 'index'])->name('videos.index');
 Route::get('/videos/{video}', [VideosController::class, 'show'])->name('videos.show');
+
+// ─── Rutes de gestió de sèries (auth + gates) — ABANS dels wildcards ─────────
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/series/manage', [SeriesManageController::class, 'index'])
+        ->name('series.manage')
+        ->can('manage-series');
+
+    Route::get('/series/manage/create', [SeriesManageController::class, 'create'])
+        ->name('series.manage.create')
+        ->can('create-series');
+
+    Route::post('/series/manage', [SeriesManageController::class, 'store'])
+        ->name('series.manage.store')
+        ->can('create-series');
+
+    Route::get('/series/manage/{serie}/edit', [SeriesManageController::class, 'edit'])
+        ->name('series.manage.edit')
+        ->can('edit-series');
+
+    Route::put('/series/manage/{serie}', [SeriesManageController::class, 'update'])
+        ->name('series.manage.update')
+        ->can('edit-series');
+
+    Route::get('/series/manage/{serie}/delete', [SeriesManageController::class, 'delete'])
+        ->name('series.manage.delete')
+        ->can('delete-series');
+
+    Route::delete('/series/manage/{serie}', [SeriesManageController::class, 'destroy'])
+        ->name('series.manage.destroy')
+        ->can('delete-series');
+
+    // Rutes públiques de sèries (auth requerida)
+    Route::get('/series', [SeriesController::class, 'index'])->name('series.index');
+    Route::get('/series/{serie}', [SeriesController::class, 'show'])->name('series.show');
+});
 
 // ─── Dashboard (Jetstream) ────────────────────────────────────────────────────
 Route::middleware([

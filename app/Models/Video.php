@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 
 class Video extends Model
 {
@@ -29,6 +28,11 @@ class Video extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function serie(): BelongsTo
+    {
+        return $this->belongsTo(Serie::class, 'series_id');
     }
 
     // Retorna "13 de gener de 2025"
