@@ -29,7 +29,6 @@ function add_personal_team(User $user): void
 
 /**
  * Crea o retorna l'usuari per defecte de l'aplicació.
- * Les credencials es llegeixen de config/users.php → .env
  */
 function defaultUser(): User
 {
@@ -50,7 +49,6 @@ function defaultUser(): User
 
 /**
  * Crea o retorna el professor per defecte de l'aplicació.
- * Les credencials es llegeixen de config/users.php → .env
  */
 function defaultProfessor(): User
 {
@@ -75,8 +73,7 @@ function defaultProfessor(): User
 }
 
 /**
- * Crea o retorna el video per defecte de l'aplicació.
- * Les dades es llegeixen de config/videos.php → .env
+ * Crea o retorna el primer video per defecte de l'aplicació.
  */
 function defaultVideo(): Video
 {
@@ -87,6 +84,36 @@ function defaultVideo(): Video
         [
             'description'  => $data['description'],
             'url'          => $data['url'],
+            'published_at' => now(),
+        ]
+    );
+}
+
+/**
+ * Crea o retorna el segon video per defecte de l'aplicació.
+ */
+function defaultVideo2(): Video
+{
+    return Video::firstOrCreate(
+        ['title' => 'Video per defecte 2'],
+        [
+            'description'  => 'Descripció del segon video per defecte',
+            'url'          => 'https://www.youtube.com/watch?v=abc123def45',
+            'published_at' => now(),
+        ]
+    );
+}
+
+/**
+ * Crea o retorna el tercer video per defecte de l'aplicació.
+ */
+function defaultVideo3(): Video
+{
+    return Video::firstOrCreate(
+        ['title' => 'Video per defecte 3'],
+        [
+            'description'  => 'Descripció del tercer video per defecte',
+            'url'          => 'https://www.youtube.com/watch?v=xyz789uvw12',
             'published_at' => now(),
         ]
     );
@@ -114,7 +141,7 @@ function create_regular_user(): User
 }
 
 /**
- * Crea o retorna el Video Manager i li assigna el permís 'manage-videos'.
+ * Crea o retorna el Video Manager i li assigna tots els permisos CRUD de vídeos.
  */
 function create_video_manager_user(): User
 {
@@ -129,9 +156,12 @@ function create_video_manager_user(): User
 
     add_personal_team($user);
 
-    $permission = Permission::firstOrCreate(['name' => 'manage-videos']);
-    if (! $user->hasPermissionTo('manage-videos')) {
-        $user->givePermissionTo($permission);
+    $permissions = ['manage-videos', 'create-videos', 'edit-videos', 'delete-videos'];
+    foreach ($permissions as $permName) {
+        $perm = Permission::firstOrCreate(['name' => $permName]);
+        if (! $user->hasPermissionTo($permName)) {
+            $user->givePermissionTo($perm);
+        }
     }
 
     return $user->fresh();
@@ -170,6 +200,18 @@ function define_gates(): void
     Gate::define('manage-videos', function (User $user): bool {
         return $user->hasPermissionTo('manage-videos') || $user->isSuperAdmin();
     });
+
+    Gate::define('create-videos', function (User $user): bool {
+        return $user->hasPermissionTo('create-videos') || $user->isSuperAdmin();
+    });
+
+    Gate::define('edit-videos', function (User $user): bool {
+        return $user->hasPermissionTo('edit-videos') || $user->isSuperAdmin();
+    });
+
+    Gate::define('delete-videos', function (User $user): bool {
+        return $user->hasPermissionTo('delete-videos') || $user->isSuperAdmin();
+    });
 }
 
 /**
@@ -177,5 +219,8 @@ function define_gates(): void
  */
 function create_permissions(): void
 {
-    Permission::firstOrCreate(['name' => 'manage-videos']);
+    $permissions = ['manage-videos', 'create-videos', 'edit-videos', 'delete-videos'];
+    foreach ($permissions as $name) {
+        Permission::firstOrCreate(['name' => $name]);
+    }
 }

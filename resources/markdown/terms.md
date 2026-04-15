@@ -42,6 +42,20 @@ L'aplicació ha estat construïda amb **Laravel + Jetstream (Livewire)** i perme
 - Publicació dels **stubs** de Laravel per personalitzar la generació de codi.
 - Verificació de 0 errors amb **Larastan**.
 
+### 4t Sprint
+
+- CRUD complet de vídeos via **`VideosManageController`**: `index`, `create`, `store`, `show`, `edit`, `update`, `delete`, `destroy`.
+- Funció **`index()`** a `VideosController` per llistar tots els vídeos publicats.
+- Tres vídeos per defecte: `defaultVideo()`, `defaultVideo2()`, `defaultVideo3()` als helpers i al DatabaseSeeder.
+- Nous permisos CRUD: **`create-videos`**, **`edit-videos`**, **`delete-videos`** (afegits a `create_permissions()` i `define_gates()`).
+- **`create_video_manager_user()`** assigna els 4 permisos CRUD al Video Manager.
+- Vistes del CRUD de gestió: `manage/index.blade.php`, `manage/create.blade.php`, `manage/edit.blade.php`, `manage/delete.blade.php` (amb atribut `data-qa`).
+- Vista pública **`videos/index.blade.php`** amb llistat de vídeos estil YouTube (miniatures, títol, data).
+- Rutes CRUD protegides per gate + ruta pública `/videos` per a l'índex.
+- **Navbar i footer** afegits al layout `videos-app.blade.php` amb navegació entre pàgines.
+- Tests: `UserTest`, `VideosTest` (+3 tests índex) i `VideosManageControllerTest` (+10 tests CRUD) seguint **TDD + AAA**.
+- Verificació de 0 errors amb **Larastan**.
+
 ---
 
 ## Alumne
